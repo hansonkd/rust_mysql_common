@@ -970,11 +970,8 @@ pub struct OptionalMetadataIter<'a> {
 impl<'a> OptionalMetadataIter<'a> {
     /// Reads type-length-value value.
     fn read_tlv(&mut self) -> io::Result<(RawConst<u8, OptionalMetadataFieldType>, &'a [u8])> {
-
-        println!("before: {}", self.data.len());
         let t = self.data.read_u8()?;
         let l = self.data.read_u8()? as usize;
-        println!("after: {}", self.data.len());
 
         let num = match l {
             0xfc =>
@@ -1006,7 +1003,6 @@ impl<'a> OptionalMetadataIter<'a> {
                 ));
             }
         };
-        println!("v: {:?}", v.iter().collect::<Vec<_>>());
 
         self.data = &self.data[(num as usize)..];
         Ok((RawConst::new(t), v))
@@ -1041,16 +1037,12 @@ impl<'a> Iterator for OptionalMetadataIter<'a> {
 
         self.next_tlv()?
             .and_then(|(t, v)| {
-                println!("tlv {:?} {:?}", t, v);
-
                 let mut v = ParseBuf(v);
                 match t.get() {
                     Ok(t) => match t {
                         SIGNEDNESS => {
                             let num_numeric = self.count_columns(ColumnType::is_numeric_type);
                             let num_flags_bytes = (num_numeric + 7) / 8;
-
-                            println!("signedness {} {}", num_numeric, num_flags_bytes);
 
                             let flags: &[u8] = v.parse(num_flags_bytes)?;
 
@@ -1061,11 +1053,7 @@ impl<'a> Iterator for OptionalMetadataIter<'a> {
                                 ));
                             }
 
-                            println!("flags {:?}", flags);
-
                             let flags = BitSlice::from_slice(flags).expect("the slice is too big");
-
-                            println!("slice {:?} {}", flags, flags.len());
 
                             Ok(OptionalMetadataField::Signedness(&flags))
                         }
