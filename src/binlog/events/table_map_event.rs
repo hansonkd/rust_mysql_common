@@ -1008,7 +1008,7 @@ impl<'a> OptionalMetadataIter<'a> {
         };
         println!("v: {:?}", v.iter().collect::<Vec<_>>());
 
-        self.data = &self.data[..(num as usize)];
+        self.data = &self.data[(num as usize)..];
         Ok((RawConst::new(t), v))
     }
 
