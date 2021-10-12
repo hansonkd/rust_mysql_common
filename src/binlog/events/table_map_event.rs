@@ -972,7 +972,36 @@ impl<'a> OptionalMetadataIter<'a> {
     fn read_tlv(&mut self) -> io::Result<(RawConst<u8, OptionalMetadataFieldType>, &'a [u8])> {
         let t = self.data.read_u8()?;
         let l = self.data.read_u8()? as usize;
-        let v = match self.data.get(..l) {
+
+        let (num, is_null, n) = match l {
+            0xfc => (
+                (u64::from(self.data.read_u8()?) | u64::from(self.data.read_u8()?) << 8),
+                false,
+                3,
+            ),
+            0xfd => (
+                (u64::from(self.data.read_u8()?)
+                    | u64::from(self.data.read_u8()?) << 8
+                    | u64::from(self.data.read_u8()?) << 16),
+                false,
+                4,
+            ),
+            0xfe => (
+                (u64::from(self.data.read_u8()?)
+                    | u64::from(self.data.read_u8()?) << 8
+                    | u64::from(self.data.read_u8()?) << 16
+                    | u64::from(self.data.read_u8()?) << 24
+                    | u64::from(self.data.read_u8()?) << 32
+                    | u64::from(self.data.read_u8()?) << 40
+                    | u64::from(self.data.read_u8()?) << 48
+                    | u64::from(self.data.read_u8()?) << 56),
+                false,
+                9,
+            ),
+            _ => (0, true, 1),
+        };
+
+        let v = match self.data.get(..(num as usize)) {
             Some(v) => v,
             None => {
                 self.data = &[];
