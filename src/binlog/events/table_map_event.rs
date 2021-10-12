@@ -973,20 +973,16 @@ impl<'a> OptionalMetadataIter<'a> {
         let t = self.data.read_u8()?;
         let l = self.data.read_u8()? as usize;
 
-        let (num, is_null, n) = match l {
-            0xfc => (
+        println("l: {}", l)
+
+        let num = match l {
+            0xfc =>
                 (u64::from(self.data.read_u8()?) | u64::from(self.data.read_u8()?) << 8),
-                false,
-                3,
-            ),
-            0xfd => (
+            0xfd => 
                 (u64::from(self.data.read_u8()?)
                     | u64::from(self.data.read_u8()?) << 8
                     | u64::from(self.data.read_u8()?) << 16),
-                false,
-                4,
-            ),
-            0xfe => (
+            0xfe =>
                 (u64::from(self.data.read_u8()?)
                     | u64::from(self.data.read_u8()?) << 8
                     | u64::from(self.data.read_u8()?) << 16
@@ -995,10 +991,8 @@ impl<'a> OptionalMetadataIter<'a> {
                     | u64::from(self.data.read_u8()?) << 40
                     | u64::from(self.data.read_u8()?) << 48
                     | u64::from(self.data.read_u8()?) << 56),
-                false,
-                9,
-            ),
-            _ => (0, true, 1),
+            0xfb => 0,
+            other => other,
         };
 
         let v = match self.data.get(..(num as usize)) {
