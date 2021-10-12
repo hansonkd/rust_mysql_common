@@ -973,6 +973,7 @@ impl<'a> OptionalMetadataIter<'a> {
         let t = self.data.read_u8()?;
         let l = self.data.read_u8()? as usize;
 
+        println!("d: {}", self.data.len());
         println!("l: {}", l);
 
         let num = match l {
