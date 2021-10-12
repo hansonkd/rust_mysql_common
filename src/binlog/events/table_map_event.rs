@@ -970,8 +970,12 @@ pub struct OptionalMetadataIter<'a> {
 impl<'a> OptionalMetadataIter<'a> {
     /// Reads type-length-value value.
     fn read_tlv(&mut self) -> io::Result<(RawConst<u8, OptionalMetadataFieldType>, &'a [u8])> {
+
+        println!("before: {}", self.data.len());
         let t = self.data.read_u8()?;
         let l = self.data.read_u8()? as usize;
+        println!("after: {}", self.data.len());
+        println!("l: {}", l);
 
         let num = match l {
             0xfc =>
@@ -1003,7 +1007,7 @@ impl<'a> OptionalMetadataIter<'a> {
                 ));
             }
         };
-        self.data = &self.data[..l];
+        self.data = &self.data[..(num as usize)];
         Ok((RawConst::new(t), v))
     }
 
