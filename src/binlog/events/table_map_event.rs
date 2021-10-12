@@ -1041,6 +1041,8 @@ impl<'a> Iterator for OptionalMetadataIter<'a> {
 
         self.next_tlv()?
             .and_then(|(t, v)| {
+                println!("tlv {:?} {:?}", t, v);
+
                 let mut v = ParseBuf(v);
                 match t.get() {
                     Ok(t) => match t {
