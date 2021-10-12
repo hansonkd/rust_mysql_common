@@ -1064,7 +1064,10 @@ impl<'a> Iterator for OptionalMetadataIter<'a> {
                             println!("flags {:?}", flags);
 
                             let flags = BitSlice::from_slice(flags).expect("the slice is too big");
-                            Ok(OptionalMetadataField::Signedness(&flags[..num_flags_bytes]))
+
+                            println!("slice {:?} {}", flags, flags.len());
+
+                            Ok(OptionalMetadataField::Signedness(&flags))
                         }
                         DEFAULT_CHARSET => Ok(OptionalMetadataField::DefaultCharset(v.parse(())?)),
                         COLUMN_CHARSET => Ok(OptionalMetadataField::ColumnCharset(v.parse(())?)),
