@@ -165,7 +165,7 @@ impl<'de> MyDeserialize<'de> for BinlogRow {
             .iter_optional_meta()
             .find_map(|m| {
                 m.map(|f| match f {
-                    OptionalMetadataField::Signedness(bit_slice) => Some(bit_slice.to_bitvec()),
+                    OptionalMetadataField::Signedness(bit_slice) => None, // Some(bit_slice.to_bitvec()),
                     _ => None,
                 })
                 .unwrap_or(None)
