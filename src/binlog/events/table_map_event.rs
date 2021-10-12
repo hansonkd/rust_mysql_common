@@ -1047,6 +1047,9 @@ impl<'a> Iterator for OptionalMetadataIter<'a> {
                         SIGNEDNESS => {
                             let num_numeric = self.count_columns(ColumnType::is_numeric_type);
                             let num_flags_bytes = (num_numeric + 7) / 8;
+
+                            println!("signedness {} {}", num_numeric, num_flags_bytes);
+
                             let flags: &[u8] = v.parse(num_flags_bytes)?;
 
                             if !v.is_empty() {
@@ -1055,6 +1058,8 @@ impl<'a> Iterator for OptionalMetadataIter<'a> {
                                     "bytes remaining on stream",
                                 ));
                             }
+
+                            println!("flags {:?}", flags);
 
                             let flags = BitSlice::from_slice(flags).expect("the slice is too big");
                             Ok(OptionalMetadataField::Signedness(&flags[..num_flags_bytes]))
