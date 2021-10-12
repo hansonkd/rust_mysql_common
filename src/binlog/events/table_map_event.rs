@@ -975,7 +975,7 @@ impl<'a> OptionalMetadataIter<'a> {
         let t = self.data.read_u8()?;
         let l = self.data.read_u8()? as usize;
         println!("after: {}", self.data.len());
-        println!("l: {}", l);
+        println!("l: {} | {}", t, l);
 
         let num = match l {
             0xfc =>
