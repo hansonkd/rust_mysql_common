@@ -975,7 +975,6 @@ impl<'a> OptionalMetadataIter<'a> {
         let t = self.data.read_u8()?;
         let l = self.data.read_u8()? as usize;
         println!("after: {}", self.data.len());
-        println!("l: {} | {}", t, l);
 
         let num = match l {
             0xfc =>
@@ -1007,6 +1006,8 @@ impl<'a> OptionalMetadataIter<'a> {
                 ));
             }
         };
+        println!("v: {:?}", v.iter().collect::<Vec<_>>());
+
         self.data = &self.data[..(num as usize)];
         Ok((RawConst::new(t), v))
     }
