@@ -153,7 +153,7 @@ impl<'a> TableMapEvent<'a> {
     pub fn iter_optional_meta(&'a self) -> OptionalMetadataIter<'a> {
         OptionalMetadataIter {
             columns: &self.columns_type,
-            data: self.columns_metadata.as_bytes(),
+            data: self.optional_metadata.as_bytes(),
         }
     }
 
@@ -970,13 +970,8 @@ pub struct OptionalMetadataIter<'a> {
 impl<'a> OptionalMetadataIter<'a> {
     /// Reads type-length-value value.
     fn read_tlv(&mut self) -> io::Result<(RawConst<u8, OptionalMetadataFieldType>, &'a [u8])> {
-        println!("db: {}", self.data.len());
-
         let t = self.data.read_u8()?;
         let l = self.data.read_u8()? as usize;
-
-        println!("d: {}", self.data.len());
-        println!("l: {}", l);
 
         let num = match l {
             0xfc =>
