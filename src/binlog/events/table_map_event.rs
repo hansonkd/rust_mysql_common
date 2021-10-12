@@ -973,7 +973,7 @@ impl<'a> OptionalMetadataIter<'a> {
         let t = self.data.read_u8()?;
         let l = self.data.read_u8()? as usize;
 
-        println("l: {}", l)
+        println!("l: {}", l);
 
         let num = match l {
             0xfc =>
@@ -992,7 +992,7 @@ impl<'a> OptionalMetadataIter<'a> {
                     | u64::from(self.data.read_u8()?) << 48
                     | u64::from(self.data.read_u8()?) << 56),
             0xfb => 0,
-            other => other,
+            other => other as u64,
         };
 
         let v = match self.data.get(..(num as usize)) {
